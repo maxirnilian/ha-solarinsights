@@ -13,6 +13,7 @@
           "panel_azimuth": "Modulazimut (°)",
           "efficiency_percentage": "Wirkungsgrad (%)",
           "max_power": "Maximale Leistung pro Modul (Wp)",
+          "diffuse_percentage": "Streuungsanteil (%)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }
@@ -30,6 +31,7 @@
           "panel_azimuth": "Modulazimut (°)",
           "efficiency_percentage": "Wirkungsgrad (%)",
           "max_power": "Maximale Leistung pro Modul (Wp)",
+          "diffuse_percentage": "Streuungsanteil (%)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }

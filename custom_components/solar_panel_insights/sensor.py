@@ -13,14 +13,11 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 
-from . import DOMAIN
+from . import DEFAULT_DIFFUSE_PERCENTAGE, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
 SUN_ENTITY = "sun.sun"
-# Diffuse share of clear-sky potential so incident-normalized irradiance stays bounded
-# when beam geometry (cos θ) approaches zero at sunrise/sunset.
-DIFFUSE_FRACTION = 0.115
 
 
 def _get_config_value(config_entry: ConfigEntry, key: str, default: Any) -> Any:
@@ -70,6 +67,9 @@ class BasePanelSensor(SensorEntity):
             config_entry, "efficiency_percentage", 15.0
         )
         self._max_power = _get_config_value(config_entry, "max_power", 0.0)
+        self._diffuse_percentage = _get_config_value(
+            config_entry, "diffuse_percentage", DEFAULT_DIFFUSE_PERCENTAGE
+        )
         self._input_power_entity = _get_config_value(
             config_entry, "input_power_entity", None
         )
@@ -177,8 +177,9 @@ class BasePanelSensor(SensorEntity):
 
         beam = max(0.0, cos_theta)
         f_sky = (1.0 + math.cos(math.radians(self._panel_tilt))) / 2.0
-        numerator = (1.0 - DIFFUSE_FRACTION) * beam + DIFFUSE_FRACTION * f_sky
-        denominator = (1.0 - DIFFUSE_FRACTION) + DIFFUSE_FRACTION * f_sky
+        k_d = self._diffuse_percentage / 100
+        numerator = (1.0 - k_d) * beam + k_d * f_sky
+        denominator = (1.0 - k_d) + k_d * f_sky
         if denominator <= 0:
             return None
         return numerator / denominator

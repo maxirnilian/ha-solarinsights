@@ -8,7 +8,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from . import DOMAIN
+from . import DEFAULT_DIFFUSE_PERCENTAGE, DOMAIN
 
 
 def _get_config_value(config_entry: config_entries.ConfigEntry, key: str, default):
@@ -44,6 +44,10 @@ class SolarPanelInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     default=15.0,
                 ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
                 vol.Required("max_power"): vol.Coerce(float),
+                vol.Required(
+                    "diffuse_percentage",
+                    default=DEFAULT_DIFFUSE_PERCENTAGE,
+                ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
                 vol.Required("input_power_entity"): selector.selector(
                     {
                         "entity": {
@@ -103,6 +107,14 @@ class SolarPanelInsightsOptionsFlowHandler(config_entries.OptionsFlow):
                     "max_power",
                     default=_get_config_value(self.config_entry, "max_power", 0),
                 ): vol.Coerce(float),
+                vol.Required(
+                    "diffuse_percentage",
+                    default=_get_config_value(
+                        self.config_entry,
+                        "diffuse_percentage",
+                        DEFAULT_DIFFUSE_PERCENTAGE,
+                    ),
+                ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
                 vol.Required(
                     "input_power_entity",
                     default=_get_config_value(

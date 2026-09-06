@@ -38,6 +38,7 @@ Add the integration via **Settings** → **Devices & services** → **Add integr
 | Panel azimuth (°) | Compass direction the panels face (180° = south in the northern hemisphere) |
 | Efficiency (%) | Panel efficiency percentage |
 | Maximum power per panel (Wp) | Rated peak power per panel |
+| Diffuse fraction (%) | Diffuse share of clear-sky potential for incident-normalized irradiance (default `11.5`) |
 | Input power sensor | Power sensor for your installation |
 
 Settings can be updated later via **Configure** on the integration entry.
@@ -61,7 +62,7 @@ F_sky = (1 + cos β) / 2
 f = [ (1 − k_d) × beam + k_d × F_sky ] / [ (1 − k_d) + k_d × F_sky ]
 ```
 
-with `k_d = 0.115`. `β` is panel tilt. `F_sky` is the isotropic sky view factor (flat ≈ 1, vertical ≈ 0.5). Dividing by `f` removes incidence-angle losses so midday (`cos θ = 1`) maps to full `P_rated`. When the sun is up but behind the panel (`cos θ < 0`), beam is zero and only the diffuse sky term remains.
+with configurable `k_d` (diffuse fraction, default `11.5%`). `β` is panel tilt. `F_sky` is the isotropic sky view factor (flat ≈ 1, vertical ≈ 0.5). Dividing by `f` removes incidence-angle losses so midday (`cos θ = 1`) maps to full `P_rated`. When the sun is up but behind the panel (`cos θ < 0`), beam is zero and only the diffuse sky term remains.
 
 `cos θ` is the sun-to-panel-normal geometry factor.
 
