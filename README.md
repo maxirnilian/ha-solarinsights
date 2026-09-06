@@ -1,6 +1,6 @@
-<img src="custom_components/solar_panel_insights/brand/icon.png" alt="Solar Panel Insights" width="40" height="40">
+<img src="custom_components/solar_insights/brand/icon.png" alt="Solar Insights" width="40" height="40">
 
-# Solar Panel Insights
+# Solar Insights
 
 Home Assistant custom integration that calculates detailed solar panel metrics using panel geometry, the built-in [sun](https://www.home-assistant.io/integrations/sun/) integration, and a linked power sensor.
 
@@ -18,16 +18,16 @@ Home Assistant custom integration that calculates detailed solar panel metrics u
 
 1. Open **HACS** → **Integrations**
 2. Click the three-dot menu → **Custom repositories**
-3. Add `https://github.com/maxirnilian/ha-solarpanelinsights` with category **Integration**
-4. Search for **Solar Panel Insights**, install, and restart Home Assistant
+3. Add `https://github.com/maxirnilian/ha-solarinsights` with category **Integration**
+4. Search for **Solar Insights**, install, and restart Home Assistant
 
 ### Manual
 
-Copy the `custom_components/solar_panel_insights` folder into your Home Assistant `config/custom_components/` directory and restart Home Assistant.
+Copy the `custom_components/solar_insights` folder into your Home Assistant `config/custom_components/` directory and restart Home Assistant.
 
 ## Configuration
 
-Add the integration via **Settings** → **Devices & services** → **Add integration** → **Solar Panel Insights**.
+Add the integration via **Settings** → **Devices & services** → **Add integration** → **Solar Insights**.
 
 | Field | Description |
 | --- | --- |

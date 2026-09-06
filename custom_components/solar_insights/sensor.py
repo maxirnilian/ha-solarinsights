@@ -1,4 +1,4 @@
-"""Sensor platform for Solar Panel Insights."""
+"""Sensor platform for Solar Insights."""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Solar Panel Insights sensors from a config entry."""
+    """Set up Solar Insights sensors from a config entry."""
     async_add_entities(
         [
             IncidenceAngleSensor(hass, config_entry),
@@ -55,7 +55,7 @@ class BasePanelSensor(SensorEntity):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, config_entry.entry_id)},
             name=config_entry.title,
-            manufacturer="Solar Panel Insights",
+            manufacturer="Solar Insights",
         )
 
         self._panel_height = _get_config_value(config_entry, "panel_height", 0)

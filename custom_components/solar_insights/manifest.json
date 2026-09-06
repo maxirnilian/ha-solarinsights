@@ -1,0 +1,13 @@
+{
+  "domain": "solar_insights",
+  "name": "Solar Insights",
+  "codeowners": ["@maxirnilian"],
+  "config_flow": true,
+  "dependencies": ["sun"],
+  "documentation": "https://github.com/maxirnilian/ha-solarinsights",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/maxirnilian/ha-solarinsights/issues",
+  "requirements": [],
+  "version": "2026.9.0"
+}

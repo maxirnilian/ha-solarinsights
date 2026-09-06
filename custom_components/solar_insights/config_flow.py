@@ -1,4 +1,4 @@
-"""Config flow for Solar Panel Insights."""
+"""Config flow for Solar Insights."""
 
 from __future__ import annotations
 
@@ -18,13 +18,13 @@ def _get_config_value(config_entry: config_entries.ConfigEntry, key: str, defaul
     return config_entry.data.get(key, default)
 
 
-class SolarPanelInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Solar Panel Insights."""
+class SolarInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Solar Insights."""
 
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
         if user_input is not None:
-            return self.async_create_entry(title="Solar Panel Insights", data=user_input)
+            return self.async_create_entry(title="Solar Insights", data=user_input)
 
         schema = vol.Schema(
             {
@@ -64,11 +64,11 @@ class SolarPanelInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry):
         """Get the options flow for this handler."""
-        return SolarPanelInsightsOptionsFlowHandler()
+        return SolarInsightsOptionsFlowHandler()
 
 
-class SolarPanelInsightsOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle Solar Panel Insights options."""
+class SolarInsightsOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle Solar Insights options."""
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""

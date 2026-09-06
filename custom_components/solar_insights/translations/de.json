@@ -1,9 +1,9 @@
 {
-  "title": "Solar Panel Insights",
+  "title": "Solar Insights",
   "config": {
     "step": {
       "user": {
-        "title": "Solar Panel Insights einrichten",
+        "title": "Solar Insights einrichten",
         "description": "Konfiguriere deine Solaranlage, um detaillierte Solarpanel-Metriken zu berechnen.",
         "data": {
           "panel_height": "Modulhöhe (mm)",
@@ -22,7 +22,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Solar Panel Insights-Einstellungen aktualisieren",
+        "title": "Solar Insights-Einstellungen aktualisieren",
         "data": {
           "panel_height": "Modulhöhe (mm)",
           "panel_width": "Modulbreite (mm)",

@@ -1,9 +1,9 @@
 {
-  "title": "Solar Panel Insights",
+  "title": "Solar Insights",
   "config": {
     "step": {
       "user": {
-        "title": "Set up Solar Panel Insights",
+        "title": "Set up Solar Insights",
         "description": "Configure your solar panel array to calculate detailed solar panel metrics.",
         "data": {
           "panel_height": "Panel height (mm)",
@@ -22,7 +22,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Update Solar Panel Insights settings",
+        "title": "Update Solar Insights settings",
         "data": {
           "panel_height": "Panel height (mm)",
           "panel_width": "Panel width (mm)",

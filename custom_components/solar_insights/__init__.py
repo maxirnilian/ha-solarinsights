@@ -1,4 +1,4 @@
-"""The Solar Panel Insights integration."""
+"""The Solar Insights integration."""
 
 import logging
 
@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-DOMAIN = "solar_panel_insights"
+DOMAIN = "solar_insights"
 PLATFORMS = [Platform.SENSOR]
 # Diffuse share of clear-sky potential so incident-normalized irradiance stays
 # bounded when beam geometry (cos θ) approaches zero at sunrise/sunset.
@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Solar Panel Insights from a config entry."""
+    """Set up Solar Insights from a config entry."""
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
