@@ -244,7 +244,7 @@ class BasePanelSensor(SensorEntity):
         if potential_power <= 0:
             return None
 
-        return round((power / potential_power) * 100, 1)
+        return min(100.0, round((power / potential_power) * 100, 1))
 
 
 class IncidenceAngleSensor(BasePanelSensor):

@@ -54,7 +54,7 @@ Settings can be updated later via **Configure** on the integration entry.
 ### Calculations
 
 - **Absolute irradiance:** `P / (A × η)` where `P` is input power (W), `A` is total panel area (m²), and `η` is module efficiency
-- **Incident-normalized irradiance:** `(P / (P_rated × f)) × 100` where `P_rated` is total rated power (Wp) and
+- **Incident-normalized irradiance:** `(P / (P_rated × f)) × 100` (capped at 100%) where `P_rated` is total rated power (Wp) and
 
 ```text
 beam = max(0, cos θ)
