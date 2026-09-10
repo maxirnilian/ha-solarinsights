@@ -8,7 +8,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from . import DEFAULT_DIFFUSE_PERCENTAGE, DOMAIN
+from . import DEFAULT_DIFFUSE_PERCENTAGE, DEFAULT_SUNSHINE_THRESHOLD, DOMAIN
 
 
 def _get_config_value(config_entry: config_entries.ConfigEntry, key: str, default):
@@ -47,6 +47,10 @@ class SolarInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(
                     "diffuse_percentage",
                     default=DEFAULT_DIFFUSE_PERCENTAGE,
+                ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
+                vol.Required(
+                    "sunshine_threshold",
+                    default=DEFAULT_SUNSHINE_THRESHOLD,
                 ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
                 vol.Required("input_power_entity"): selector.selector(
                     {
@@ -113,6 +117,18 @@ class SolarInsightsOptionsFlowHandler(config_entries.OptionsFlow):
                         self.config_entry,
                         "diffuse_percentage",
                         DEFAULT_DIFFUSE_PERCENTAGE,
+                    ),
+                ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
+                vol.Required(
+                    "sunshine_threshold",
+                    default=_get_config_value(
+                        self.config_entry,
+                        "sunshine_threshold",
+                        _get_config_value(
+                            self.config_entry,
+                            "sunny_percentage",
+                            DEFAULT_SUNSHINE_THRESHOLD,
+                        ),
                     ),
                 ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
                 vol.Required(

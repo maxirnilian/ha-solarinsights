@@ -14,6 +14,7 @@
           "efficiency_percentage": "Efficiency (%)",
           "max_power": "Maximum power per panel (Wp)",
           "diffuse_percentage": "Diffuse fraction (%)",
+          "sunshine_threshold": "Sunshine threshold (%)",
           "input_power_entity": "Input power sensor"
         }
       }
@@ -32,6 +33,7 @@
           "efficiency_percentage": "Efficiency (%)",
           "max_power": "Maximum power per panel (Wp)",
           "diffuse_percentage": "Diffuse fraction (%)",
+          "sunshine_threshold": "Sunshine threshold (%)",
           "input_power_entity": "Input power sensor"
         }
       }
@@ -47,6 +49,11 @@
       },
       "incident_normalized_irradiance": {
         "name": "Incident-normalized irradiance"
+      }
+    },
+    "binary_sensor": {
+      "sunny": {
+        "name": "Sunny"
       }
     }
   }

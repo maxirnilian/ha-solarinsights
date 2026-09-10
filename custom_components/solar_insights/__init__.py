@@ -7,10 +7,11 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 DOMAIN = "solar_insights"
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR]
 # Diffuse share of clear-sky potential so incident-normalized irradiance stays
 # bounded when beam geometry (cos θ) approaches zero at sunrise/sunset.
 DEFAULT_DIFFUSE_PERCENTAGE = 11.5
+DEFAULT_SUNSHINE_THRESHOLD = 40.0
 
 _LOGGER = logging.getLogger(__name__)
 

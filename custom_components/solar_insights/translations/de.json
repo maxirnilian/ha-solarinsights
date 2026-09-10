@@ -14,6 +14,7 @@
           "efficiency_percentage": "Wirkungsgrad (%)",
           "max_power": "Maximale Leistung pro Modul (Wp)",
           "diffuse_percentage": "Streuungsanteil (%)",
+          "sunshine_threshold": "Schwellenwert für Sonnenschein (%)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }
@@ -32,6 +33,7 @@
           "efficiency_percentage": "Wirkungsgrad (%)",
           "max_power": "Maximale Leistung pro Modul (Wp)",
           "diffuse_percentage": "Streuungsanteil (%)",
+          "sunshine_threshold": "Schwellenwert für Sonnenschein (%)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }
@@ -47,6 +49,11 @@
       },
       "incident_normalized_irradiance": {
         "name": "Einfallsnormierte Bestrahlungsstärke"
+      }
+    },
+    "binary_sensor": {
+      "sunny": {
+        "name": "Sonnig"
       }
     }
   }
