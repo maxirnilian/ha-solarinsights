@@ -250,6 +250,8 @@ class BasePanelSensor(SensorEntity):
 class IncidenceAngleSensor(BasePanelSensor):
     """Sensor for the solar incidence angle on the panel."""
 
+    _attr_icon = "mdi:sun-angle"
+
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the incidence angle sensor."""
         super().__init__(hass, config_entry)
@@ -267,6 +269,8 @@ class IncidenceAngleSensor(BasePanelSensor):
 
 class AbsoluteIrradianceSensor(BasePanelSensor):
     """Sensor for absolute solar irradiation on the panel."""
+
+    _attr_icon = "mdi:sun-wireless-outline"
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the absolute irradiance sensor."""
@@ -286,6 +290,8 @@ class AbsoluteIrradianceSensor(BasePanelSensor):
 
 class IncidentNormalizedIrradianceSensor(BasePanelSensor):
     """Sensor for incidence-angle-normalized irradiance (ideal-beam equivalent)."""
+
+    _attr_icon = "mdi:sun-wireless-outline"
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the incident-normalized irradiance sensor."""
