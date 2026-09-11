@@ -41,7 +41,7 @@ Add the integration via **Settings** → **Devices & services** → **Add integr
 | Maximum power per panel (Wp) | Rated peak power per panel |
 | Diffuse fraction (%) | Diffuse share of clear-sky potential for incident-normalized irradiance (default `11.5`) |
 | Sunshine threshold (%) | Incident-normalized irradiance at or above this value is considered sunny (default `40`) |
-| Input power sensor | Power sensor for your installation |
+| Input power sensor | Power sensor for your installation (any power unit; converted to W automatically) |
 
 Settings can be updated later via **Configure** on the integration entry.
 
@@ -56,8 +56,8 @@ Settings can be updated later via **Configure** on the integration entry.
 
 ### Calculations
 
-- **Absolute irradiance:** `P / (A × η)` where `P` is input power (W), `A` is total panel area (m²), and `η` is module efficiency
-- **Incident-normalized irradiance:** `(P / (P_rated × f)) × 100` (capped at 100%) where `P_rated` is total rated power (Wp) and
+- **Absolute irradiance:** `P / (A × η)` where `P` is input power converted to W from the linked sensor's unit, `A` is total panel area (m²), and `η` is module efficiency
+- **Incident-normalized irradiance:** `(P / (P_rated × f)) × 100` (capped at 100%) where `P` is again in W, `P_rated` is total rated power (Wp) and
 
 ```text
 beam = max(0, cos θ)

@@ -6,9 +6,12 @@ import math
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import ATTR_UNIT_OF_MEASUREMENT, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.util.unit_conversion import PowerConverter
 
 from . import DEFAULT_DIFFUSE_PERCENTAGE, DEFAULT_SUNSHINE_THRESHOLD, DOMAIN
 
@@ -186,7 +189,11 @@ class BasePanelEntity:
         return round(90.0 - aoi, 2)
 
     def input_power(self) -> float | None:
-        """Return the current input power of the linked entity."""
+        """Return the current input power of the linked entity in watts.
+
+        Converts from the linked sensor's unit of measurement (e.g. kW) to W.
+        Sensors without a unit are treated as watts for backward compatibility.
+        """
         if not self._input_power_entity:
             return None
 
@@ -197,7 +204,19 @@ class BasePanelEntity:
         ):
             return None
 
-        return float(input_power_state.state)
+        try:
+            value = float(input_power_state.state)
+        except (TypeError, ValueError):
+            return None
+
+        unit = input_power_state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+        if unit is None or unit == UnitOfPower.WATT:
+            return value
+
+        try:
+            return PowerConverter.convert(value, unit, UnitOfPower.WATT)
+        except HomeAssistantError:
+            return None
 
     def absolute_irradiance(self) -> float | None:
         """Return effective plane-of-array irradiance in W/m²."""
