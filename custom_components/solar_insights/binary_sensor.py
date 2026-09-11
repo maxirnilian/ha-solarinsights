@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -26,6 +29,7 @@ async def async_setup_entry(
 class SunnyBinarySensor(BasePanelEntity, BinarySensorEntity):
     """Binary sensor that is on when incident-normalized irradiance is sunny."""
 
+    _attr_device_class = BinarySensorDeviceClass.LIGHT
     _attr_icon = "mdi:weather-sunny"
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
