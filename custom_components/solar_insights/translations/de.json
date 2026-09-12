@@ -15,6 +15,7 @@
           "max_power": "Maximale Leistung pro Modul (Wp)",
           "diffuse_percentage": "Streuungsanteil (%)",
           "sunshine_threshold": "Schwellenwert für Sonnenschein (%)",
+          "median_window_minutes": "Zeitfenster für Medianwerte (Minuten)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }
@@ -34,6 +35,7 @@
           "max_power": "Maximale Leistung pro Modul (Wp)",
           "diffuse_percentage": "Streuungsanteil (%)",
           "sunshine_threshold": "Schwellenwert für Sonnenschein (%)",
+          "median_window_minutes": "Zeitfenster für Medianwerte (Minuten)",
           "input_power_entity": "Eingangsleistungssensor"
         }
       }
@@ -49,11 +51,17 @@
       },
       "incident_normalized_irradiance": {
         "name": "Einfallsnormierte Bestrahlungsstärke"
+      },
+      "incident_normalized_irradiance_median": {
+        "name": "Einfallsnormierte Bestrahlungsstärke (Median)"
       }
     },
     "binary_sensor": {
       "sunny": {
         "name": "Sonnig"
+      },
+      "sunny_median": {
+        "name": "Sonnig (Median)"
       }
     }
   }

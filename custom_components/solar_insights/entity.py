@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import math
+import time
+from collections import deque
+from collections.abc import Sequence
+from datetime import timedelta
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -10,12 +14,21 @@ from homeassistant.const import ATTR_UNIT_OF_MEASUREMENT, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.helpers.event import (
+    async_track_state_change_event,
+    async_track_time_interval,
+)
 from homeassistant.util.unit_conversion import PowerConverter
 
-from . import DEFAULT_DIFFUSE_PERCENTAGE, DEFAULT_SUNSHINE_THRESHOLD, DOMAIN
+from . import (
+    DEFAULT_DIFFUSE_PERCENTAGE,
+    DEFAULT_MEDIAN_WINDOW_MINUTES,
+    DEFAULT_SUNSHINE_THRESHOLD,
+    DOMAIN,
+)
 
 SUN_ENTITY = "sun.sun"
+MEDIAN_RECOMPUTE_INTERVAL = timedelta(seconds=30)
 
 
 def _get_config_value(config_entry: ConfigEntry, key: str, default: Any) -> Any:
@@ -23,6 +36,47 @@ def _get_config_value(config_entry: ConfigEntry, key: str, default: Any) -> Any:
     if key in config_entry.options:
         return config_entry.options[key]
     return config_entry.data.get(key, default)
+
+
+def time_weighted_median(
+    samples: Sequence[tuple[float, float]],
+    now: float,
+    window_seconds: float,
+) -> float | None:
+    """Return the time-weighted median of (timestamp, value) samples.
+
+    Each sample is held until the next sample (last value held until ``now``).
+    Segments are clipped to ``[now - window_seconds, now]``.
+    """
+    if not samples or window_seconds <= 0:
+        return None
+
+    window_start = now - window_seconds
+    segments: list[tuple[float, float]] = []
+
+    for index, (timestamp, value) in enumerate(samples):
+        end = samples[index + 1][0] if index + 1 < len(samples) else now
+        clipped_start = max(timestamp, window_start)
+        clipped_end = min(end, now)
+        duration = clipped_end - clipped_start
+        if duration > 0:
+            segments.append((value, duration))
+
+    if not segments:
+        return None
+
+    total = sum(duration for _value, duration in segments)
+    if total <= 0:
+        return None
+
+    ordered = sorted(segments, key=lambda item: item[0])
+    accumulated = 0.0
+    halfway = total / 2.0
+    for value, duration in ordered:
+        accumulated += duration
+        if accumulated >= halfway:
+            return value
+    return ordered[-1][0]
 
 
 class BasePanelEntity:
@@ -258,6 +312,92 @@ class BasePanelEntity:
             return False
 
         irradiance = self.incident_normalized_irradiance()
+        if irradiance is None:
+            return None
+        return irradiance >= self._sunshine_threshold
+
+
+class MedianWindowMixin:
+    """Rolling time-weighted median of incident-normalized irradiance."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Initialize the median window buffer."""
+        super().__init__(*args, **kwargs)
+        self._median_window_minutes = int(
+            _get_config_value(
+                self.config_entry,
+                "median_window_minutes",
+                DEFAULT_MEDIAN_WINDOW_MINUTES,
+            )
+        )
+        self._median_samples: deque[tuple[float, float]] = deque()
+
+    @property
+    def _median_window_seconds(self) -> float:
+        """Return the configured median window in seconds."""
+        return self._median_window_minutes * 60
+
+    async def async_added_to_hass(self) -> None:
+        """Recompute the median as the window slides, even without new samples."""
+        await super().async_added_to_hass()
+
+        @callback
+        def handle_interval(_now) -> None:
+            self._update_state()
+            self.async_write_ha_state()
+
+        self.async_on_remove(
+            async_track_time_interval(
+                self.hass, handle_interval, MEDIAN_RECOMPUTE_INTERVAL
+            )
+        )
+
+    def _prune_median_samples(self, now: float) -> None:
+        """Drop samples that can no longer affect the current window."""
+        window_start = now - self._median_window_seconds
+        while (
+            len(self._median_samples) >= 2
+            and self._median_samples[1][0] <= window_start
+        ):
+            self._median_samples.popleft()
+
+    def _record_median_sample(self, now: float, value: float | None) -> None:
+        """Record a live sample, skipping consecutive duplicates."""
+        self._prune_median_samples(now)
+        if value is None:
+            return
+        if self._median_samples and self._median_samples[-1][1] == value:
+            return
+        self._median_samples.append((now, value))
+
+    def _clear_median_samples(self) -> None:
+        """Forget recorded samples (used at sunset)."""
+        self._median_samples.clear()
+
+    def median_incident_normalized_irradiance(self) -> float | None:
+        """Return time-weighted median incident-normalized irradiance."""
+        now = time.monotonic()
+        sun_states = self._sun_states()
+        if sun_states is not None and sun_states[0] <= 0:
+            self._clear_median_samples()
+            return None
+
+        self._record_median_sample(now, self.incident_normalized_irradiance())
+        median = time_weighted_median(
+            self._median_samples, now, self._median_window_seconds
+        )
+        if median is None:
+            return None
+        return round(median, 1)
+
+    def is_sunny_median(self) -> bool | None:
+        """Return True when the median irradiance meets the sunshine threshold."""
+        sun_states = self._sun_states()
+        if sun_states is not None and sun_states[0] <= 0:
+            self._clear_median_samples()
+            return False
+
+        irradiance = self.median_incident_normalized_irradiance()
         if irradiance is None:
             return None
         return irradiance >= self._sunshine_threshold

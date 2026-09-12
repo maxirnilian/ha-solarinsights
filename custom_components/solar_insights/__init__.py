@@ -12,6 +12,7 @@ PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR]
 # bounded when beam geometry (cos θ) approaches zero at sunrise/sunset.
 DEFAULT_DIFFUSE_PERCENTAGE = 11.5
 DEFAULT_SUNSHINE_THRESHOLD = 40.0
+DEFAULT_MEDIAN_WINDOW_MINUTES = 3
 
 _LOGGER = logging.getLogger(__name__)
 

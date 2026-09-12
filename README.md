@@ -10,6 +10,7 @@ Home Assistant custom integration that calculates detailed solar panel metrics u
 - Estimates plane-of-array irradiation from measured power
 - Estimates incident-normalized irradiance (ideal-beam equivalent) using beam plus isotropic sky view
 - Exposes a sunny/not-sunny binary sensor from incident-normalized irradiance
+- Exposes median incident-normalized irradiance and sunny sensors so brief clouds do not flicker automations
 - Uses elevation and azimuth from the built-in `sun.sun` entity
 - Configurable panel dimensions, tilt, azimuth, efficiency, and linked power sensor
 
@@ -41,6 +42,7 @@ Add the integration via **Settings** → **Devices & services** → **Add integr
 | Maximum power per panel (Wp) | Rated peak power per panel |
 | Diffuse fraction (%) | Diffuse share of clear-sky potential for incident-normalized irradiance (default `11.5`) |
 | Sunshine threshold (%) | Incident-normalized irradiance at or above this value is considered sunny (default `40`) |
+| Median window (minutes) | Lookback for median irradiance and sunny (median) sensors (default `3`) |
 | Input power sensor | Power sensor for your installation (any power unit; converted to W automatically) |
 
 Settings can be updated later via **Configure** on the integration entry.
@@ -52,7 +54,9 @@ Settings can be updated later via **Configure** on the integration entry.
 | Incidence angle | ° | Angle between the sun ray and the panel surface (0° = grazing, 90° = perpendicular) |
 | Irradiance | W/m² | Effective plane-of-array irradiance implied by measured power |
 | Incident-normalized irradiance | % | Measured power vs rated power with incidence angle compensated (ideal-beam equivalent) |
+| Incident-normalized irradiance (median) | % | Time-weighted median of incident-normalized irradiance over the median window |
 | Sunny | on/off | On when incident-normalized irradiance is at or above the sunshine threshold |
+| Sunny (median) | on/off | On when median incident-normalized irradiance is at or above the sunshine threshold |
 
 ### Calculations
 
@@ -71,8 +75,10 @@ with configurable `k_d` (diffuse fraction, default `11.5%`). `β` is panel tilt.
 
 - **Incidence angle:** `90° − acos(cos θ)` — the angle between the sun ray and the panel surface, not the panel normal.
 - **Sunny:** on when incident-normalized irradiance is ≥ the sunshine threshold (default `40%`).
+- **Incident-normalized irradiance (median):** time-weighted median of incident-normalized irradiance over the configured median window (default `3` minutes). Brief clouds shorter than half the window do not change the value.
+- **Sunny (median):** on when the median incident-normalized irradiance is ≥ the sunshine threshold.
 
-The incidence angle and incident-normalized irradiance sensors are unavailable when the sun is below the horizon (elevation ≤ 0). Irradiance is unavailable when the sun is behind the panel (`cos θ ≤ 0`) or required inputs are missing. The sunny binary sensor is off when the sun is below the horizon, and unavailable when required inputs are missing.
+The incidence angle and incident-normalized irradiance sensors (including the median) are unavailable when the sun is below the horizon (elevation ≤ 0). Irradiance is unavailable when the sun is behind the panel (`cos θ ≤ 0`) or required inputs are missing. The sunny binary sensors are off when the sun is below the horizon, and unavailable when required inputs are missing.
 
 ## Requirements
 

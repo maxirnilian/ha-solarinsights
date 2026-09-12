@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entity import BasePanelEntity
+from .entity import BasePanelEntity, MedianWindowMixin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,6 +25,7 @@ async def async_setup_entry(
             IncidenceAngleSensor(hass, config_entry),
             AbsoluteIrradianceSensor(hass, config_entry),
             IncidentNormalizedIrradianceSensor(hass, config_entry),
+            IncidentNormalizedIrradianceMedianSensor(hass, config_entry),
         ]
     )
 
@@ -97,5 +98,27 @@ class IncidentNormalizedIrradianceSensor(BasePanelSensor):
         """Fetch new state data for the sensor."""
         try:
             self._attr_native_value = self.incident_normalized_irradiance()
+        except Exception as err:
+            _LOGGER.error("Error updating %s: %s", self.name, err)
+
+
+class IncidentNormalizedIrradianceMedianSensor(MedianWindowMixin, BasePanelSensor):
+    """Sensor for the time-weighted median of incident-normalized irradiance."""
+
+    _attr_icon = "mdi:sun-wireless-outline"
+
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+        """Initialize the median incident-normalized irradiance sensor."""
+        super().__init__(hass, config_entry)
+        self._attr_translation_key = "incident_normalized_irradiance_median"
+        self._attr_unique_id = (
+            f"{config_entry.entry_id}_incident_normalized_irradiance_median"
+        )
+        self._attr_native_unit_of_measurement = "%"
+
+    def _update_state(self) -> None:
+        """Fetch new state data for the sensor."""
+        try:
+            self._attr_native_value = self.median_incident_normalized_irradiance()
         except Exception as err:
             _LOGGER.error("Error updating %s: %s", self.name, err)

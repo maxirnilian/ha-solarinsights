@@ -15,6 +15,7 @@
           "max_power": "Maximum power per panel (Wp)",
           "diffuse_percentage": "Diffuse fraction (%)",
           "sunshine_threshold": "Sunshine threshold (%)",
+          "median_window_minutes": "Median window (minutes)",
           "input_power_entity": "Input power sensor"
         }
       }
@@ -34,6 +35,7 @@
           "max_power": "Maximum power per panel (Wp)",
           "diffuse_percentage": "Diffuse fraction (%)",
           "sunshine_threshold": "Sunshine threshold (%)",
+          "median_window_minutes": "Median window (minutes)",
           "input_power_entity": "Input power sensor"
         }
       }
@@ -49,11 +51,17 @@
       },
       "incident_normalized_irradiance": {
         "name": "Incident-normalized irradiance"
+      },
+      "incident_normalized_irradiance_median": {
+        "name": "Incident-normalized irradiance (median)"
       }
     },
     "binary_sensor": {
       "sunny": {
         "name": "Sunny"
+      },
+      "sunny_median": {
+        "name": "Sunny (median)"
       }
     }
   }

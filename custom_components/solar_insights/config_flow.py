@@ -8,7 +8,12 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from . import DEFAULT_DIFFUSE_PERCENTAGE, DEFAULT_SUNSHINE_THRESHOLD, DOMAIN
+from . import (
+    DEFAULT_DIFFUSE_PERCENTAGE,
+    DEFAULT_MEDIAN_WINDOW_MINUTES,
+    DEFAULT_SUNSHINE_THRESHOLD,
+    DOMAIN,
+)
 
 
 def _get_config_value(config_entry: config_entries.ConfigEntry, key: str, default):
@@ -52,6 +57,10 @@ class SolarInsightsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "sunshine_threshold",
                     default=DEFAULT_SUNSHINE_THRESHOLD,
                 ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
+                vol.Required(
+                    "median_window_minutes",
+                    default=DEFAULT_MEDIAN_WINDOW_MINUTES,
+                ): vol.All(vol.Coerce(int), vol.Range(min=1, max=30)),
                 vol.Required("input_power_entity"): selector.selector(
                     {
                         "entity": {
@@ -131,6 +140,14 @@ class SolarInsightsOptionsFlowHandler(config_entries.OptionsFlow):
                         ),
                     ),
                 ): vol.All(vol.Coerce(float), vol.Range(min=0, max=100)),
+                vol.Required(
+                    "median_window_minutes",
+                    default=_get_config_value(
+                        self.config_entry,
+                        "median_window_minutes",
+                        DEFAULT_MEDIAN_WINDOW_MINUTES,
+                    ),
+                ): vol.All(vol.Coerce(int), vol.Range(min=1, max=30)),
                 vol.Required(
                     "input_power_entity",
                     default=_get_config_value(
