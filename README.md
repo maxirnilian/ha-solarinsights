@@ -7,7 +7,7 @@ Home Assistant custom integration that calculates detailed solar panel metrics u
 ## Features
 
 - Calculates the angle between incoming sunlight and your panel surface
-- Estimates absolute plane-of-array irradiation from measured power
+- Estimates plane-of-array irradiation from measured power
 - Estimates incident-normalized irradiance (ideal-beam equivalent) using beam plus isotropic sky view
 - Exposes a sunny/not-sunny binary sensor from incident-normalized irradiance
 - Uses elevation and azimuth from the built-in `sun.sun` entity
@@ -50,13 +50,13 @@ Settings can be updated later via **Configure** on the integration entry.
 | Entity | Unit | Description |
 | --- | --- | --- |
 | Incidence angle | ° | Angle between the sun ray and the panel surface (0° = grazing, 90° = perpendicular) |
-| Absolute irradiance | W/m² | Effective plane-of-array irradiance implied by measured power |
+| Irradiance | W/m² | Effective plane-of-array irradiance implied by measured power |
 | Incident-normalized irradiance | % | Measured power vs rated power with incidence angle compensated (ideal-beam equivalent) |
 | Sunny | on/off | On when incident-normalized irradiance is at or above the sunshine threshold |
 
 ### Calculations
 
-- **Absolute irradiance:** `P / (A × η)` where `P` is input power converted to W from the linked sensor's unit, `A` is total panel area (m²), and `η` is module efficiency
+- **Irradiance:** `P / (A × η)` where `P` is input power converted to W from the linked sensor's unit, `A` is total panel area (m²), and `η` is module efficiency
 - **Incident-normalized irradiance:** `(P / (P_rated × f)) × 100` (capped at 100%) where `P` is again in W, `P_rated` is total rated power (Wp) and
 
 ```text
@@ -72,7 +72,7 @@ with configurable `k_d` (diffuse fraction, default `11.5%`). `β` is panel tilt.
 - **Incidence angle:** `90° − acos(cos θ)` — the angle between the sun ray and the panel surface, not the panel normal.
 - **Sunny:** on when incident-normalized irradiance is ≥ the sunshine threshold (default `40%`).
 
-The incidence angle and incident-normalized irradiance sensors are unavailable when the sun is below the horizon (elevation ≤ 0). Absolute irradiance is unavailable when the sun is behind the panel (`cos θ ≤ 0`) or required inputs are missing. The sunny binary sensor is off when the sun is below the horizon, and unavailable when required inputs are missing.
+The incidence angle and incident-normalized irradiance sensors are unavailable when the sun is below the horizon (elevation ≤ 0). Irradiance is unavailable when the sun is behind the panel (`cos θ ≤ 0`) or required inputs are missing. The sunny binary sensor is off when the sun is below the horizon, and unavailable when required inputs are missing.
 
 ## Requirements
 

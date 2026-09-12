@@ -45,7 +45,7 @@
         "name": "Incidence angle"
       },
       "absolute_irradiation": {
-        "name": "Absolute irradiance"
+        "name": "Irradiance"
       },
       "incident_normalized_irradiance": {
         "name": "Incident-normalized irradiance"

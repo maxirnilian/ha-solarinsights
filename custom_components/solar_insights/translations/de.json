@@ -45,7 +45,7 @@
         "name": "Einfallswinkel"
       },
       "absolute_irradiation": {
-        "name": "Absolute Bestrahlungsstärke"
+        "name": "Bestrahlungsstärke"
       },
       "incident_normalized_irradiance": {
         "name": "Einfallsnormierte Bestrahlungsstärke"
